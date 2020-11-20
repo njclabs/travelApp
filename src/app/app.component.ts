@@ -7,4 +7,8 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   title = 'travelApp';
+
+  public fetchTravelData(origin: any,destination: any,travelDate: any){
+    console.log(origin.value);
+  }
 }
