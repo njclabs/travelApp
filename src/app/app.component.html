@@ -156,6 +156,10 @@
     </table>
     <div>
       <hr style="height:10px;color: black;">
+      <table *ngIf="showWeatherAndCovidData"> 
+          <h4 style="color: black;margin-left: 924px;margin-top: 0px;height: 1px;">London Weather(in Celcius): 10</h4>
+          <h4 style="color: #cc1616;margin-left: 924px;margin-top: 0px;height: 1px;">London Active Covid cases: 5</h4>
+      </table>
       <table style='color: black;' id="trainTable"> 
         <thead>
             <tr>
@@ -164,6 +168,7 @@
               <th>Destination</th>
               <th>Estimatated Arrival Time</th>
               <th>Estimated Departure Time</th>
+              <th>Total duration</th>
             </tr>
         </thead>
         <tbody>
@@ -173,6 +178,7 @@
             <td>{{ data.destination }}</td>
             <td>{{ data.eta }}</td>
             <td>{{ data.etd }}</td>
+            <td>{{ data.duration }}</td>
           </tr>
         </tbody>
       </table>
@@ -183,7 +189,18 @@
 <div class="covidData">
     <h1 style="margin-left: 63px;color: #3f486b;height: 12px;margin-top: 6px;font-weight: 100;font-size: 25px;">COVID UPDATE</h1>
     <div style="align-content: center;margin-top: 25px;overflow-y: auto;bottom: 0%;height: 700px;"> 
-      <table id="covidTable"> 
+      <style>
+        .tableFixHead {
+          overflow-y: auto;
+          height: 700px;
+        }
+        .tableFixHead thead th {
+          position: sticky;
+          top: 0;
+        }
+        </style>
+        <div class="tableFixHead">
+        <table id="covidTable"> 
         <thead>
             <tr>
               <th>Location</th>
@@ -197,5 +214,6 @@
           </tr>
         </tbody>
       </table>
+      </div>
     </div>
 </div>
