@@ -9,6 +9,10 @@ import { LoginComponent } from './login/login/login.component';
 import { RegistrationComponent } from './registration/registration/registration.component';
 import { LandingPageComponent } from './landingPage/landing-page/landing-page.component';
 import { FooterComponent } from './footer/footer/footer.component';
+import { MatTableModule } from '@angular/material/table';
+import {MAT_FORM_FIELD_DEFAULT_OPTIONS} from '@angular/material/form-field';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { FormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -22,9 +26,11 @@ import { FooterComponent } from './footer/footer/footer.component';
   imports: [
     BrowserModule,
     AppRoutingModule,
-    Ng2SmartTableModule
+    Ng2SmartTableModule,
+    MatTableModule,
+    MatCheckboxModule,
+    FormsModule
   ],
-  providers: [],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

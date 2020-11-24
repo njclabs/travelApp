@@ -25,7 +25,8 @@ export class LandingService {
   fetchTrainData(origin: any,destination: any,travelDate: any){
       this.trainData = [];
       this.trainData.push(
-          {
+          {   
+              selected: false,
               trainNumber: 1,
               origin: 'London',
               destination: 'Hatfield',
@@ -34,6 +35,7 @@ export class LandingService {
               duration: '10'
           },
           {
+              selected: true,
               trainNumber: 2,
               origin: 'Australia',
               destination: 'Canada',
