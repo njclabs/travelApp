@@ -32,8 +32,37 @@
   <hr style="color: black;">
   <h4 *ngIf="!showWeatherAndCovidData" style="color:#f50f0f;margin-left: 400px;">Once trains are searched, data will be displayed.....</h4>
 <div *ngIf="showWeatherAndCovidData">
-  <h6 style="color: black;display:inline">London Weather(in Celcius): 10</h6>
+ <p style="display: inline;">
+  <button type="button" class="btn btn-outline-primary" (click)="showWeather()" [attr.aria-expanded]="!isCollapsed"
+    aria-controls="collapseExample" style="width: 200px; margin-left: 0px">
+    Click for {{weatherDetails.cityName}} Weather
+  </button>
+</p>
+<h6 style="color: #cc1616;margin-left: 400px;display:inline">London Active Covid cases: 5</h6>
+<div #collapse="ngbCollapse" [(ngbCollapse)]="isCollapsed">
+  <div class="card">
+    <div class="card-body" style="background-color: #e0e0ef;">
+      <h6 style="color: black">Temperature(in Celcius): {{weatherDetails.temperature}}</h6>
+      <h6 style="color: black">Humidity(in Celcius): {{weatherDetails.humidity}}</h6>
+      <h6 style="color: black">Sky: {{weatherDetails.weather}}</h6>
+      <h6 style="color: black">Wind Speed: {{weatherDetails.windSpeed}}</h6>
+      <h6 style="color: black">Visibility: {{weatherDetails.visibility}}</h6>
+    </div>
+  </div>
+</div>
+ <!--
   <h6 style="color: #cc1616;margin-left: 400px;display:inline">London Active Covid cases: 5</h6>
+ --> 
+  
+ <!-- <h6 style="color: black">Temperature(in Celcius): {{weatherDetails.temperature}}</h6>
+  <h6 style="color: black">Humidity(in Celcius): {{weatherDetails.humidity}}</h6>
+  <h6 style="color: black">Sky: {{weatherDetails.weather}}</h6>
+  <h6 style="color: black">Wind Speed: {{weatherDetails.windSpeed}}</h6>
+  <h6 style="color: black">Visibility: {{weatherDetails.visibility}}</h6>-->
+ 
+
+
+
   <hr style="color: black;margin-top: 0px;margin-bottom: 0px;"> 
   <input type="button" (click)=subscribeTrain() value={{subscribeTrainText}} 
              style="margin-left: 991px;font-size: 18px;background: darkgray;display: inline;margin-top: 5px;margin-bottom: 5px;" [disabled] = "toggle">

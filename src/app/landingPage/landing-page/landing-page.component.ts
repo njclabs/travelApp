@@ -21,21 +21,26 @@ export class LandingPageComponent implements OnInit {
   public subscribeTrainText = "Subscribe Trains";
   public toggle = false;
   public loading = false;
+  public weatherDetails = [];
+  public isCollapsed = false;
 
 
   constructor(landingService: LandingService) { 
     this.landingPageService = landingService;
+    this.isCollapsed = false;
   }
 
   ngOnInit() {
     this.locations = this.landingPageService.getLocations();
     this.covidData = this.landingPageService.fetchCovidData();
     this.trainData = this.landingPageService.fetchTrainData(1,2,3)
+    this.isCollapsed = false;
   }
 
   public fetchTravelData(origin: any,destination: any,travelDate: any){
     this.loading = true
     this.showWeatherAndCovidData = true;
+    this.isCollapsed = true;
    /*this.landingPageService.fetchTrainData()
     .subscribe(
         data => {
@@ -68,6 +73,8 @@ export class LandingPageComponent implements OnInit {
   this.loading = false
    // this.trainData = this.landingPageService.fetchTrainData(origin,destination,travelDate)
    // this.showWeatherAndCovidData = true;
+
+   this.weatherDetails = this.landingPageService.fetchWeatherDetails(destination);
   }
 
   subscribeTrain() {
@@ -83,5 +90,9 @@ export class LandingPageComponent implements OnInit {
     }))
     this.subscribeTrainText = "Subscribe Trains";
     this.toggle = false;
+  }
+
+  showWeather(){
+    this.isCollapsed = !this.isCollapsed;
   }
 }

@@ -72,15 +72,20 @@ export class LandingService {
       return this.trainData;*/
   }
 
-  fetchWeatherDetails(location: any){
-      let weatherDetails: any = [];
-      weatherDetails.push({
+  fetchWeatherDetails(location: any) {
+      let weatherDetails: any = {
           cityName: "London",
           temperature: '28',
           temp_min: '26',
           temp_max: '28',
-          feelsLike: '200'
-      })
+          feelsLike: '200',
+          humidity: '79',
+          weather: 'clear sky',
+          clouds: '61',
+          windSpeed: '3.09',
+          visibility: '10000'
+      }
+      return weatherDetails;
   }
 
 
