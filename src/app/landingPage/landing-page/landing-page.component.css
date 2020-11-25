@@ -1,3 +1,15 @@
+.inProgress {
+  position: absolute;
+  top: 76px;
+  left: 0;
+  right: 20%;
+  bottom:0%;
+  background-color: #f9f9fb;
+  color: white;
+  font-weight: 600;
+  z-index: 1;
+}
+
 .trainBody {
     position: absolute;
     top: 76px;
@@ -102,4 +114,10 @@ table {
 
 .example-margin {
   margin: 0 10px;
+}
+
+.customizeButton{
+  margin-left: 0px;
+  font-size: 18px;
+  background: darkgray;
 }

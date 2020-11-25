@@ -18,12 +18,10 @@ export class LandingPageComponent implements OnInit {
   public trainData = []
   public covidData = []
   public showWeatherAndCovidData = false;
-  public message = "hello hi how are you?";
+  public subscribeTrainText = "Subscribe Trains";
+  public toggle = false;
+  public loading = false;
 
-  checked = false;
-  indeterminate = false;
-  labelPosition: 'before' | 'after' = 'after';
-  disabled = false;
 
   constructor(landingService: LandingService) { 
     this.landingPageService = landingService;
@@ -36,13 +34,54 @@ export class LandingPageComponent implements OnInit {
   }
 
   public fetchTravelData(origin: any,destination: any,travelDate: any){
-    this.trainData = this.landingPageService.fetchTrainData(origin,destination,travelDate)
+    this.loading = true
     this.showWeatherAndCovidData = true;
+   /*this.landingPageService.fetchTrainData()
+    .subscribe(
+        data => {
+          console.log('success', data),
+          this.trainData = data;
+          console.log('success', data),
+          this.showWeatherAndCovidData = true;
+          this.loading = false; 
+        },
+        error => console.log('oops', error)
+    );*/
+    this.trainData = [{   
+      selected: false,
+      trainNumber: 1,
+      origin: 'London',
+      destination: 'Hatfield',
+      eta: '22:10',
+      etd: '11:11',
+      duration: '10'
+  },
+  {
+      selected: true,
+      trainNumber: 2,
+      origin: 'Australia',
+      destination: 'Canada',
+      eta: '22:10',
+      etd: '11:11',
+      duration: '20'
+  }]
+  this.loading = false
+   // this.trainData = this.landingPageService.fetchTrainData(origin,destination,travelDate)
+   // this.showWeatherAndCovidData = true;
   }
 
   subscribeTrain() {
+    console.log('h')
+    this.toggle = true;
+    
+    this.subscribeTrainText = "Subscribing";
+    for (let i = 0; i < 300000; i++) {
+      
+    }
     console.log(this.trainData.filter((train) => {
       return train.selected
     }))
+    this.subscribeTrainText = "Subscribe Trains";
+    this.toggle = false;
   }
 }
