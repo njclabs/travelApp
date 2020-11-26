@@ -46,13 +46,12 @@
       <td></td>
     </tr>  
   </table>
-  <div class="spinner" [ngClass]="{ hidden: loading }"></div>
   <hr style="color: black;">
   <h4 *ngIf="!showWeatherAndCovidData" style="color:#211514;margin-left: 400px;">Once trains are searched, data will be displayed.....</h4>
 <div *ngIf="showWeatherAndCovidData">
  <p style="display: inline;">
   <button type="button" class="btn btn-outline-primary" (click)="showWeather()" [attr.aria-expanded]="!isCollapsed"
-    aria-controls="collapseExample" style="width: 290px; margin-left: 0px">
+    aria-controls="collapseExample" style="width: 290px;margin-left: 0px;padding: 0px;">
     Travel Date {{weatherDetails.cityName}} Weather forecast
   </button>
 </p>
@@ -68,7 +67,7 @@
         <h6 style="color: black;margin-left: 10px;margin-top: 10px;display: inline;">Temperature(in celcius): {{weatherDetails.temperature}}</h6>
       
         <img
-        style="width: 20px;right: 0;height: 16px;margin-left: 16pc;display: inline;"
+        style="width: 20px;right: 0;height: 16px;margin-left: 12.5pc;display: inline;"
         src="../assets/images/humidity.png"
        />
        <h6 style="color: black;margin-left: 10px;margin-top: 10px;display: inline;">Humidity(%): {{weatherDetails.humidity}}</h6>

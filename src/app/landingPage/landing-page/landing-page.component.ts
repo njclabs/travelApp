@@ -69,7 +69,7 @@ export class LandingPageComponent implements OnInit {
 
   ngOnInit() {
     this.locations = this.landingPageService.getLocations();
- /*  this.landingPageService.getLocations().subscribe(data => {
+  /*this.landingPageService.getLocations().subscribe(data => {
      console.log(data)
    },
    error => {
@@ -85,50 +85,33 @@ export class LandingPageComponent implements OnInit {
     this.loading = true
     this.showWeatherAndCovidData = true;
     this.isCollapsed = true;
-   /*this.landingPageService.fetchTrainData()
+    /*this.landingPageService.fetchTrainData()
     .subscribe(
         data => {
           console.log('success', data),
-          this.trainData = data;
+        //  this.trainData = data;
           console.log('success', data),
           this.showWeatherAndCovidData = true;
           this.loading = false; 
         },
         error => console.log('oops', error)
     );*/
-    this.trainData = [{   
-      selected: false,
-      trainNumber: 1,
-      origin: 'London',
-      destination: 'Hatfield',
-      eta: '22:10',
-      etd: '11:11',
-      duration: '10'
-  },
-  {
-      selected: true,
-      trainNumber: 2,
-      origin: 'Australia',
-      destination: 'Canada',
-      eta: '22:10',
-      etd: '11:11',
-      duration: '20'
-  }]
-  this.loading = false
-   // this.trainData = this.landingPageService.fetchTrainData(origin,destination,travelDate)
+   
+    this.loading = false
+    this.trainData = this.landingPageService.fetchTrainData(origin,destination,travelDate)
    // this.showWeatherAndCovidData = true;
 
-   this.weatherDetails = this.landingPageService.fetchWeatherDetails(destination);
+    this.landingPageService.fetchWeatherDetails(destination).subscribe(
+     data => this.weatherDetails = data,
+     error => console.log(error)
+   );
   }
 
   subscribeTrain() {
-    console.log('h')
     this.toggle = true;
     
     this.subscribeTrainText = "Subscribing";
-    for (let i = 0; i < 300000; i++) {
-      
-    }
+    
     console.log(this.trainData.filter((train) => {
       return train.selected
     }))
@@ -139,4 +122,17 @@ export class LandingPageComponent implements OnInit {
   showWeather(){
     this.isCollapsed = !this.isCollapsed;
   }
+}
+
+interface WeatherDetails {
+  cityName: any,
+  temperature: any,
+  temp_min: any,
+  temp_max: any,
+  feelsLike: any,
+  humidity: any,
+  weather: any,
+  clouds: any,
+  windSpeed: any,
+  visibility: any
 }
