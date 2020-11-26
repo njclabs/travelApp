@@ -86,32 +86,32 @@ export class LandingService {
               activeCases: '1000'
           },
           {
-              location: 'London',
-              activeCases: '1000'
+              location: 'Hatfield',
+              activeCases: '1'
           },
           {
-              location: 'London',
-              activeCases: '1000'
+              location: 'Redhill',
+              activeCases: '28'
           },
           {
-              location: 'London',
-              activeCases: '1000'
+              location: 'Bath',
+              activeCases: '222'
           },
           {
-              location: 'London',
-              activeCases: '1000'
+              location: 'Reading',
+              activeCases: '1'
           },
           {
-              location: 'London',
-              activeCases: '1000'
+              location: 'Bristol',
+              activeCases: '2000'
           },
           {
-              location: 'London',
-              activeCases: '1000'
+              location: 'Brighton',
+              activeCases: '5'
           },
           {
-              location: 'London',
-              activeCases: '1000'
+              location: 'Barmingham',
+              activeCases: '15'
           }
       )
       return this.covidData;
