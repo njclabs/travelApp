@@ -3,21 +3,15 @@
   
   <table style="margin-top: 20px;">
     <tr> 
-      <td style="width:35%">
-        <span style="margin-left: 0px;">Origin</span> 
-        <select #origin style="width: 65%;"> 
-          <option *ngFor="let location of locations" value={{location.name}}>
-            {{location.name}}
-          </option>
-        </select>
+      <td style="width:30%">
+        <span style="margin-left: 0px; display: inline;">Origin: </span> 
+        <input #origin id="typeahead-format" type="text" class="form-control" style="display: inline;width: 13pc;height: 25px;margin-left: 2.6pc;"
+        [(ngModel)]="originModel" [ngbTypeahead]="locationSearch" [resultFormatter]="formatter" [inputFormatter]="inputFormatter" placeholder="Enter origin location"/>
       </td>
       <td style="width:35%">
-        <span style="margin-left: 0px;">Destination</span> 
-        <select #destination>
-          <option *ngFor="let location of locations" value={{location.name}}>
-              {{location.name}}
-          </option>
-        </select>
+        <span style="margin-left: 0px;">Destination: </span>
+        <input #destination id="typeahead-format1" type="text" class="form-control" style="display: inline;width: 13pc;height: 25px;"
+        [(ngModel)]="destinationModel" [ngbTypeahead]="locationSearch" [resultFormatter]="formatter" [inputFormatter]="inputFormatter" placeholder="Enter destination location"/>        
       </td>
       <td style="width:25%">
         <span style="margin-left: 0px;">Travel Date</span> 
@@ -27,26 +21,82 @@
         <button style="margin-left: 0px;font-size: 18px;background: darkgray;" [disabled]="loading" (click)="fetchTravelData(origin,destination,travelDate)">Search</button>
       </td>   
     </tr>
+    <tr>
+      <td style="width:30%">
+        <span style="margin-left: 10.5pc; display: inline;">----- or -----</span> 
+      </td>
+      <td style="width:35%">
+        <span style="margin-left: 10.5pc; display: inline;">----- or -----</span> 
+      </td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td style="width:30%">
+        <span style="margin-left: 0px; display: inline;">Post Code: </span> 
+        <input #originPostCode id="typeahead-format" type="text" class="form-control" style="display: inline;width: 13pc;height: 25px;"
+        [(ngModel)]="originPostCodeModel" [ngbTypeahead]="postalCodeSearch" [resultFormatter]="postCodeformatter" [inputFormatter]="inputPostCodeFormatter" placeholder="Enter origin postal code"/>
+      </td>
+      <td style="width:35%">
+        <span style="margin-left: 0px; display: inline;">Post Code: </span> 
+        <input #destinationPostCode id="typeahead-format" type="text" class="form-control" style="display: inline;width: 13pc;height: 25px;margin-left:1pc"
+        [(ngModel)]="destinationPostCodeModel" [ngbTypeahead]="postalCodeSearch" [resultFormatter]="postCodeformatter" [inputFormatter]="inputPostCodeFormatter" placeholder="Enter dest postal code"/>
+      </td>
+      <td></td>
+      <td></td>
+    </tr>  
   </table>
   <div class="spinner" [ngClass]="{ hidden: loading }"></div>
   <hr style="color: black;">
-  <h4 *ngIf="!showWeatherAndCovidData" style="color:#f50f0f;margin-left: 400px;">Once trains are searched, data will be displayed.....</h4>
+  <h4 *ngIf="!showWeatherAndCovidData" style="color:#211514;margin-left: 400px;">Once trains are searched, data will be displayed.....</h4>
 <div *ngIf="showWeatherAndCovidData">
  <p style="display: inline;">
   <button type="button" class="btn btn-outline-primary" (click)="showWeather()" [attr.aria-expanded]="!isCollapsed"
-    aria-controls="collapseExample" style="width: 200px; margin-left: 0px">
-    Click for {{weatherDetails.cityName}} Weather
+    aria-controls="collapseExample" style="width: 290px; margin-left: 0px">
+    Travel Date {{weatherDetails.cityName}} Weather forecast
   </button>
 </p>
-<h6 style="color: #cc1616;margin-left: 400px;display:inline">London Active Covid cases: 5</h6>
+<h6 style="color: #cc1616;margin-left: 357px;display:inline">London Active Covid cases: 5</h6>
 <div #collapse="ngbCollapse" [(ngbCollapse)]="isCollapsed">
   <div class="card">
-    <div class="card-body" style="background-color: #e0e0ef;">
-      <h6 style="color: black">Temperature(in Celcius): {{weatherDetails.temperature}}</h6>
-      <h6 style="color: black">Humidity(in Celcius): {{weatherDetails.humidity}}</h6>
-      <h6 style="color: black">Sky: {{weatherDetails.weather}}</h6>
-      <h6 style="color: black">Wind Speed: {{weatherDetails.windSpeed}}</h6>
-      <h6 style="color: black">Visibility: {{weatherDetails.visibility}}</h6>
+    <div class="card-body" style="background-color: #efeff5">
+      <div>
+        <img
+          style="width: 20px;right: 0;height: 16px;margin-left: 10px;display: inline;"
+          src="../assets/images/temperature.png"
+         />
+        <h6 style="color: black;margin-left: 10px;margin-top: 10px;display: inline;">Temperature(in celcius): {{weatherDetails.temperature}}</h6>
+      
+        <img
+        style="width: 20px;right: 0;height: 16px;margin-left: 16pc;display: inline;"
+        src="../assets/images/humidity.png"
+       />
+       <h6 style="color: black;margin-left: 10px;margin-top: 10px;display: inline;">Humidity(%): {{weatherDetails.humidity}}</h6>
+     
+       <h6 style="color: black;margin-left: 16pc;margin-top: 10px; display: inline;">Sky: </h6>
+        <img
+        style="width: 20px;right: 0;height: 16px;margin-left: 1pc;display: inline;"
+        src="../assets/images/sunny.png"
+       />
+      </div>
+      
+      <div>
+        <img
+          style="width: 20px;right: 0;height: 16px;margin-left: 10px; display: inline;"
+          src="../assets/images/windy.png"
+        />
+        <h6 style="color: black;margin-left: 10px;margin-top: 10px; display: inline;">Wind Speed(in Kms/hr): {{weatherDetails.windSpeed}}</h6>
+     
+        <img
+          style="width: 20px;right: 0;height: 16px;margin-left: 15.3pc; display: inline;"
+          src="../assets/images/visibility.png"
+        />
+        <h6 style="color: black;margin-left: 10px;margin-top: 10px;display: inline;">Visibility(in Kms): {{weatherDetails.visibility}}</h6>
+   
+      </div>
+       
+      <div>
+           </div>   
     </div>
   </div>
 </div>
