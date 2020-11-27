@@ -15,9 +15,16 @@ export class LandingService {
   constructor(private httpClient: HttpClient) { }
   
   getLocations(){
-      let api = '/api/v1/sources/exchange/assets/cd5bf5d6-a7c5-40f7-a8db-9f1046bbc2fd/mytravel-experience-api/1.0.2/m/myTravel/locations/stations';
-   //   api = '/api/myTravel/locations/stations'
+     let api = '/api/v1/sources/exchange/assets/cd5bf5d6-a7c5-40f7-a8db-9f1046bbc2fd/mytravel-experience-api/1.0.2/m/myTravel/locations/stations';
+   //api = '/api/myTravel/locations/stations'
      return this.httpClient.get(api);
+  }
+
+  fetchAttractionSpots(destination: string) {
+    let api = '/api/v1/sources/exchange/assets/cd5bf5d6-a7c5-40f7-a8db-9f1046bbc2fd/mytravel-experience-api/1.0.3/m/myTravel/locations/attractionspots?';
+     api = api +  'city=' + destination;
+     return this.httpClient.get(api);
+      
   }
 
   fetchTrainData(origin: string,destination: string,travelDate: string, originType: string,destType: string) {

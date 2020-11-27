@@ -25,9 +25,9 @@ export class LandingPageComponent implements OnInit {
   public destinationModel: any;
   public originPostCodeModel:any;
   public destinationPostCodeModel: any;
-  public dummy: any[];
   public validationMessage: string;
   public postCodes: string[] = [];
+  public nearByPlaces: any[];
 
   constructor(landingService: LandingService, config: NgbTypeaheadConfig) { 
     this.landingPageService = landingService;
@@ -126,10 +126,13 @@ export class LandingPageComponent implements OnInit {
 
       let destinationCode = '';
       let destType = 'L';
+      let travelDestination = '';
       if (destination != '' && destination != null){
         destinationCode = destination.split(' - ')[0];
+        travelDestination = destination.split(' - ')[1];
       } else {
-        destinationCode = this.getCodeFromPostalCode(destinationPostCode);  
+        destinationCode = this.getCodeFromPostalCode(destinationPostCode);
+        travelDestination = this.getCodeFromPostalCode(destinationPostCode);    
         destType = 'P'
       }
 
@@ -152,6 +155,13 @@ export class LandingPageComponent implements OnInit {
       },
       error => console.log('Error fetching weather details : ', error)
     );
+
+    this.landingPageService.fetchAttractionSpots(travelDestination).subscribe(
+      data => {
+        this.nearByPlaces = data;
+      },
+      error => console.log('Error fetching weather details : ', error)
+    );
   }
 
   getCodeFromPostalCode(code: string): any{
@@ -165,6 +175,19 @@ export class LandingPageComponent implements OnInit {
       });         
      });
      return stationCode;
+  }
+
+  getdestinationFromPostalCode(code: string): any{
+    let stationName= '';
+    this.locations.forEach(element => {
+      element.postCodes.forEach(post =>{
+        if (code == post){
+          stationName = element.stationName;
+          return; 
+        }
+      });         
+     });
+     return stationName;
   }
 
   showWeather(){
