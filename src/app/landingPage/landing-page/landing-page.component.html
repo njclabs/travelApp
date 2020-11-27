@@ -1,6 +1,5 @@
 <div class="trainBody"> 
   <h3 style="color: black;margin-left: 457px;margin-top: 10px;">SEARCH TRAINS</h3>
-  
   <table style="margin-top: 20px;">
     <tr> 
       <td style="width:30%">
@@ -18,7 +17,8 @@
         <input #travelDate type='date' title="Enter the travel date"/>
       </td> 
       <td>
-        <button style="margin-left: 0px;font-size: 18px;background: darkgray;" [disabled]="loading" (click)="fetchTravelData(origin,destination,travelDate)">Search</button>
+        <button style="margin-left: 0px;font-size: 18px;background: darkgray;" 
+        (click)="fetchTravelData(origin.value,destination.value,travelDate.value, originPostCode.value, destinationPostCode.value)">Search</button>
       </td>   
     </tr>
     <tr>
@@ -46,6 +46,7 @@
       <td></td>
     </tr>  
   </table>
+  <h6 *ngIf="validationMessage !== ''" style="color: red;margin-left: 10px;margin-top: 10px;">{{validationMessage}}</h6>
   <hr style="color: black;">
   <h4 *ngIf="!showWeatherAndCovidData" style="color:#211514;margin-left: 400px;">Once trains are searched, data will be displayed.....</h4>
 <div *ngIf="showWeatherAndCovidData">
@@ -87,7 +88,7 @@
         <h6 style="color: black;margin-left: 10px;margin-top: 10px; display: inline;">Wind Speed(in Kms/hr): {{weatherDetails.windSpeed}}</h6>
      
         <img
-          style="width: 20px;right: 0;height: 16px;margin-left: 15.3pc; display: inline;"
+          style="width: 20px;right: 0;height: 16px;margin-left: 12.5pc; display: inline;"
           src="../assets/images/visibility.png"
         />
         <h6 style="color: black;margin-left: 10px;margin-top: 10px;display: inline;">Visibility(in Kms): {{weatherDetails.visibility}}</h6>
@@ -99,27 +100,14 @@
     </div>
   </div>
 </div>
- <!--
-  <h6 style="color: #cc1616;margin-left: 400px;display:inline">London Active Covid cases: 5</h6>
- --> 
-  
- <!-- <h6 style="color: black">Temperature(in Celcius): {{weatherDetails.temperature}}</h6>
-  <h6 style="color: black">Humidity(in Celcius): {{weatherDetails.humidity}}</h6>
-  <h6 style="color: black">Sky: {{weatherDetails.weather}}</h6>
-  <h6 style="color: black">Wind Speed: {{weatherDetails.windSpeed}}</h6>
-  <h6 style="color: black">Visibility: {{weatherDetails.visibility}}</h6>-->
  
-
-
-
   <hr style="color: black;margin-top: 0px;margin-bottom: 0px;"> 
-  <input type="button" (click)=subscribeTrain() value={{subscribeTrainText}} 
-             style="margin-left: 991px;font-size: 18px;background: darkgray;display: inline;margin-top: 5px;margin-bottom: 5px;" [disabled] = "toggle">
+  <input type="button" value={{subscribeTrainText}} 
+             style="margin-left: 991px;font-size: 18px;background: darkgray;display: inline;margin-top: 5px;margin-bottom: 5px;" disabled>
       
      <table style='color: black;' id="trainTable"> 
         <thead>
             <tr>
-              <th>Select</th>
               <th>Train No.</th>
               <th>Origin</th>
               <th>Destination</th>
@@ -130,9 +118,6 @@
         </thead>
         <tbody>
           <tr *ngFor="let data of trainData">
-            <td>
-              <input type="checkbox" [(ngModel)] = "data.selected" >
-            </td>
             <td>{{ data.trainNumber }}</td>
             <td>{{ data.origin }}</td>
             <td>{{ data.destination }}</td>
@@ -171,8 +156,8 @@
       </thead>
       <tbody>
         <tr *ngFor="let data of covidData">
-          <td>{{ data.location }}</td>
-          <td>{{ data.activeCases }}</td>
+          <td>{{ data.areaName }}</td>
+          <td>{{ data.cumulative }}</td>
         </tr>
       </tbody>
     </table>
