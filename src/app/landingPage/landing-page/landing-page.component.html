@@ -47,6 +47,7 @@
     </tr>  
   </table>
   <h6 *ngIf="validationMessage !== ''" style="color: red;margin-left: 10px;margin-top: 10px;">{{validationMessage}}</h6>
+  
   <hr style="color: black;">
   <h4 *ngIf="!showWeatherAndCovidData" style="color:#211514;margin-left: 400px;">Once trains are searched, data will be displayed.....</h4>
 <div *ngIf="showWeatherAndCovidData">
@@ -127,7 +128,7 @@
           </tr>
         </tbody>
       </table>
-      
+      <h6 *ngIf="noTrainData" style="color: black;margin-left: 10px;margin-top: 10px;">No Data Found</h6>  
 </div>
 
 

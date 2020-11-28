@@ -28,6 +28,7 @@ export class LandingPageComponent implements OnInit {
   public validationMessage: string;
   public postCodes: string[] = [];
   public nearByPlaces: any[];
+  public noTrainData = true;
 
   constructor(landingService: LandingService, config: NgbTypeaheadConfig) { 
     this.landingPageService = landingService;
@@ -82,7 +83,7 @@ export class LandingPageComponent implements OnInit {
         error => console.log('Exception while fetching locations: ', error)
       );
       this.landingPageService.fetchCovidData().subscribe(data => {
-        this.covidData = data;
+         this.covidData = data;
       });
       this.isCollapsed = false;
     }
@@ -109,8 +110,7 @@ export class LandingPageComponent implements OnInit {
       && destinationPostCode != null && destinationPostCode != '') {
         this.validationMessage = this.validationMessage + 'Origin and destination postal code cannot be same.'
       }
-      //TODO: validation based on postal code
-
+     
       if (this.validationMessage !== '') {
         return;
       }
@@ -142,6 +142,7 @@ export class LandingPageComponent implements OnInit {
        .subscribe(
         data => {
           this.trainData = data;
+          this.noTrainData = data.length == 0
           this.showWeatherAndCovidData = true;
         },
         error => console.log('oops', error)

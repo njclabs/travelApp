@@ -1,6 +1,6 @@
 {
     "/api/*": {
-        "target": "https://anypoint.mulesoft.com/mocking",
+        "target": "http://njc-mytravel-experience-api.us-e2.cloudhub.io",
         "secure": false,
         "logLevel": "debug",
         "changeOrigin": true
