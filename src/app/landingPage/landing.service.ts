@@ -27,7 +27,7 @@ export class LandingService {
 
   fetchTrainData(origin: string,destination: string,travelDate: string, originType: string,destType: string) {
       let api = '/api/myTravel/locations/stations/trains?';
-      api = api + 'originCode=' + origin + '&originType=' + originType + '&destinationCode=' + destination + 
+      api = api + 'origin=' + origin + '&originType=' + originType + '&destination=' + destination + 
       '&destType=' + destType + '&travelDate=' + travelDate;
       return this.httpClient.get(api);
   }

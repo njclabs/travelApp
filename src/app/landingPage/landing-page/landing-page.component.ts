@@ -4,6 +4,9 @@ import {Observable} from 'rxjs';
 import {NgbTypeaheadConfig} from '@ng-bootstrap/ng-bootstrap';
 import {debounceTime, distinctUntilChanged, map} from 'rxjs/operators';
 import { ValueConverter } from '@angular/compiler/src/render3/view/template';
+import { ChartOptions, ChartType, ChartDataSets } from 'chart.js';
+import { Label } from 'ng2-charts';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-landing-page',
@@ -19,7 +22,7 @@ export class LandingPageComponent implements OnInit {
   public covidData = []
   public showWeatherAndCovidData = false;
   public subscribeTrainText = "Subscribe Trains";
-  public weatherDetails = [];
+  public weatherDetails:any;
   public isCollapsed = false;
   public originModel: any;
   public destinationModel: any;
@@ -27,10 +30,12 @@ export class LandingPageComponent implements OnInit {
   public destinationPostCodeModel: any;
   public validationMessage: string;
   public postCodes: string[] = [];
-  public nearByPlaces: any[];
   public noTrainData = true;
+  public restaurants: any[] = [];
+  public supermarkets: any[] = [];
+  public tourism: any[] = [];
 
-  constructor(landingService: LandingService, config: NgbTypeaheadConfig) { 
+  constructor(landingService: LandingService, config: NgbTypeaheadConfig, private toastr: ToastrService) { 
     this.landingPageService = landingService;
     this.isCollapsed = false;
     config.showHint = true;
@@ -69,8 +74,20 @@ export class LandingPageComponent implements OnInit {
     postCodeformatter = (value: any) => value
     inputPostCodeFormatter = (value: any) => value
 
+    
+    public barChartOptions: ChartOptions = {
+      responsive: true,
+    };
+    public barChartLabels: Label[] = [];
+    public barChartType: ChartType = 'bar';
+    public barChartLegend = true;
+    public barChartPlugins = [];
+    
+  
+    public barChartData: ChartDataSets[] = [];
+    
     ngOnInit() {
-      const self = this;
+    const self = this;
       this.landingPageService.getLocations().subscribe(data => {
            this.locations = data,
            data.forEach(element => {
@@ -82,116 +99,134 @@ export class LandingPageComponent implements OnInit {
         
         error => console.log('Exception while fetching locations: ', error)
       );
+
+      this.barChartLabels = [];
+      this.barChartData = [];
       this.landingPageService.fetchCovidData().subscribe(data => {
          this.covidData = data;
+         let areaNames =  [];
+         let cases = [];
+
+         data.forEach(covid => {
+          areaNames.push(covid.areaName);
+          cases.push(covid.cumulative);
+         });
+        
+         this.barChartLabels = areaNames;
+         this.barChartData = [
+          { data: cases, label: 'Total Covid Cases' }
+        ]
       });
       this.isCollapsed = false;
+  }
+
+  public fetchTravelData(origin: any,destination: any,travelDate: any, originPostCode: any, 
+    destinationPostCode: any){
+    this.validationMessage = '';
+    if((origin == '' || origin == null) && (originPostCode == '' || originPostCode == null)){
+      this.validationMessage = this.validationMessage + 'Source cannot be empty.'
+    } 
+
+    if((destination == '' || destination == null) && (destinationPostCode == '' || destinationPostCode == null)){
+      this.validationMessage = this.validationMessage + ' Destination cannot be empty.'
+    }
+    if(travelDate == '' || travelDate == null){
+      this.validationMessage = this.validationMessage + ' Travel date cannot be empty.'
+    }
+    
+    if ((origin == destination) && origin != null && origin != '' && destination != null && destination != '') {
+      this.validationMessage = this.validationMessage + 'Origin and destination cannot be same.'
     }
 
-    public fetchTravelData(origin: any,destination: any,travelDate: any, originPostCode: any, 
-      destinationPostCode: any){
-      this.validationMessage = '';
-      if((origin == '' || origin == null) && (originPostCode == '' || originPostCode == null)){
-        this.validationMessage = this.validationMessage + 'Origin cannot be empty.'
-      } 
-
-      if((destination == '' || destination == null) && (destinationPostCode == '' || destinationPostCode == null)){
-        this.validationMessage = this.validationMessage + ' Destination cannot be empty.'
-      }
-      if(travelDate == '' || travelDate == null){
-        this.validationMessage = this.validationMessage + ' Travel date cannot be empty.'
-      }
-      
-      if ((origin == destination) && origin != null && origin != '' && destination != null && destination != '') {
-        this.validationMessage = this.validationMessage + 'Origin and destination cannot be same.'
-      }
-
-      if ((originPostCode == destinationPostCode) && originPostCode != null && originPostCode != '' 
-      && destinationPostCode != null && destinationPostCode != '') {
-        this.validationMessage = this.validationMessage + 'Origin and destination postal code cannot be same.'
-      }
-     
-      if (this.validationMessage !== '') {
-        return;
-      }
-
-      let originCode = '';
-      let originType = 'L'
-      if (origin != '' && origin != null){
-        originCode = origin.split(' - ')[0];
-      } else {
-        origin = this.getCodeFromPostalCode(originPostCode);  
-        originType = 'P'
-      }
-
-      let destinationCode = '';
-      let destType = 'L';
-      let travelDestination = '';
-      if (destination != '' && destination != null){
-        destinationCode = destination.split(' - ')[0];
-        travelDestination = destination.split(' - ')[1];
-      } else {
-        destinationCode = this.getCodeFromPostalCode(destinationPostCode);
-        travelDestination = this.getCodeFromPostalCode(destinationPostCode);    
-        destType = 'P'
-      }
-
-      this.showWeatherAndCovidData = true;
-      this.isCollapsed = true;
-      this.landingPageService.fetchTrainData(originCode,destinationCode,travelDate,originType,destType)
-       .subscribe(
-        data => {
-          this.trainData = data;
-          this.noTrainData = data.length == 0
-          this.showWeatherAndCovidData = true;
-        },
-        error => console.log('oops', error)
-    );
+    if ((originPostCode == destinationPostCode) && originPostCode != null && originPostCode != '' 
+    && destinationPostCode != null && destinationPostCode != '') {
+      this.validationMessage = this.validationMessage + 'Origin and destination postal code cannot be same.'
+    }
    
-    this.landingPageService.fetchWeatherDetails(destinationCode, travelDate).subscribe(
+    if (this.validationMessage !== '') {
+      this.toastr.error(this.validationMessage);
+      return;
+    }
+
+    let originCode = '';
+    let originType = 'L'
+    if (origin != '' && origin != null){
+      originCode = origin.split(' - ')[0];
+    } else {
+      origin = this.getCodeFromPostalCode(originPostCode);  
+      originType = 'P'
+    }
+
+    let destinationCode = '';
+    let destType = 'L';
+    let travelDestination = '';
+    if (destination != '' && destination != null){
+      destinationCode = destination.split(' - ')[0];
+      travelDestination = destination.split(' - ')[1];
+    } else {
+      destinationCode = this.getCodeFromPostalCode(destinationPostCode);
+      travelDestination = this.getCodeFromPostalCode(destinationPostCode);    
+      destType = 'P'
+    }
+
+    this.showWeatherAndCovidData = true;
+    this.isCollapsed = true;
+    this.landingPageService.fetchTrainData(originCode,destinationCode,travelDate,originType,destType)
+     .subscribe(
       data => {
-        this.weatherDetails = data;
-        this.weatherDetails['visibility'] = (this.weatherDetails['visibility']/1000).toFixed(1);
-        this.weatherDetails['temperature'] = (this.weatherDetails['temperature'] - 273.15).toFixed(1); 
+        this.trainData = data;
+        this.noTrainData = data.length == 0
+        this.showWeatherAndCovidData = true;
       },
-      error => console.log('Error fetching weather details : ', error)
-    );
+      error => console.log('oops', error)
+  );
+ 
+  this.landingPageService.fetchWeatherDetails(travelDestination, travelDate).subscribe(
+    data => {
+      this.weatherDetails = data;
+      this.weatherDetails['visibility'] = (this.weatherDetails['visibility']/1000).toFixed(1);
+      this.weatherDetails['temperature'] = (this.weatherDetails['temperature'] - 273.15).toFixed(1); 
+    },
+    error => console.log('Error fetching weather details : ', error)
+  );
 
-    this.landingPageService.fetchAttractionSpots(travelDestination).subscribe(
-      data => {
-        this.nearByPlaces = data;
-      },
-      error => console.log('Error fetching weather details : ', error)
-    );
-  }
+  this.landingPageService.fetchAttractionSpots(travelDestination).subscribe(
+    data => {
+      this.restaurants = data['restaurant'];
+      this.supermarkets = data['supermarket'];
+      this.tourism = data['tourism'];
+    },
+    error => console.log('Error fetching weather details : ', error)
+  );
+}
 
-  getCodeFromPostalCode(code: string): any{
-    let stationCode = '';
-    this.locations.forEach(element => {
-      element.postCodes.forEach(post =>{
-        if (code == post){
-          stationCode = element.stationCode;
-          return; 
-        }
-      });         
-     });
-     return stationCode;
-  }
+getCodeFromPostalCode(code: string): any{
+  let stationCode = '';
+  this.locations.forEach(element => {
+    element.postCodes.forEach(post =>{
+      if (code == post){
+        stationCode = element.stationName;
+        return; 
+      }
+    });         
+   });
+   return stationCode
+}
 
-  getdestinationFromPostalCode(code: string): any{
-    let stationName= '';
-    this.locations.forEach(element => {
-      element.postCodes.forEach(post =>{
-        if (code == post){
-          stationName = element.stationName;
-          return; 
-        }
-      });         
-     });
-     return stationName;
-  }
+getdestinationFromPostalCode(code: string): any{
+  let stationName= '';
+  this.locations.forEach(element => {
+    element.postCodes.forEach(post =>{
+      if (code == post){
+        stationName = element.stationName;
+        return; 
+      }
+    });         
+   });
+   return stationName;
+}
 
-  showWeather(){
+showWeather(){
     this.isCollapsed = !this.isCollapsed;
   }
 }
